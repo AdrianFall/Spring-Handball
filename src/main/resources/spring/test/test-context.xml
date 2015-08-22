@@ -1,0 +1,58 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="core.repository.impl.jpa"/>
+
+    <context:component-scan base-package="core.service"/>
+
+    <bean id="validator"
+          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+
+    <mvc:annotation-driven/>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="username" value="postgres"/>
+        <property name="password" value="003343adaja"/>
+        <property name="url" value="#{ 'jdbc:postgresql://' + 'localhost' + ':' + '5432' + '/sosphonebook' }"/>
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="validationQuery" value="SELECT 1"/>
+    </bean>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaVendorAdapter">
+            <!-- Use Hibernate as JPA impl -->
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
+
+        <property name="jpaProperties">
+            <map>
+                <!-- Specifies the properties for JPA how to generate the db -->
+                <entry key="hibernate.hbm2ddl.auto" value="create"/> <!-- Created and Dropped along with SessionFactory Create and Close-->
+                <!-- Show SQL -->
+                <entry key="hibernate.show_sql" value="true"/>
+            </map>
+        </property>
+        <!-- Specifies the directory where the entities are located -->
+        <property name="packagesToScan" value="core.entity"/>
+    </bean>
+
+    <!-- Enables the configuration of transactional behavior based on annotations -->
+    <tx:annotation-driven/>  <!--looks for @Transactional on beans in the same application context they are defined in. This means that, if you put annotation driven configuration in a WebApplicationContext for a DispatcherServlet, it only checks for @Transactional beans in your controllers, and not your services. See Section 17.2, “The DispatcherServlet” for more information.-->
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"/>
+
+
+</beans>

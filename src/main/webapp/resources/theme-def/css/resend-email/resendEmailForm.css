@@ -1,0 +1,12 @@
+body { background-color: #eee; font: helvetica; }
+#container { width: 500px; background-color: #fff; margin: 30px auto; padding: 30px; border-radius: 5px; }
+.green { font-weight: bold; color: green; }
+.message { margin-bottom: 10px; }
+label {width:70px; display:inline-block;}
+input { display:inline-block; margin-right: 10px; }
+form {line-height: 160%; }
+.hide { display: none; }
+.resendEmailForm { margin-left: auto; margin-right: auto; width: 300px;}
+.submit {margin-left: 100px; margin-right:auto; margin-top: 5px; width: auto;}
+.error { font-size: 0.9em; font-weight: bold; color: #ac2925; width: 300px; margin-left: auto; margin-right: auto; text-align: center;}
+.msg {font-size: 0.9em; font-weight: bold; color: #398439; width: 300px; margin-left: auto; margin-right: auto; text-align: center;}

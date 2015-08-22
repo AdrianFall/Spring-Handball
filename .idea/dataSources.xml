@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="3342604154">
+    <data-source source="LOCAL" name="PostgreSQL - sosphonebook@localhost" uuid="89d84a01-bd31-4741-893f-f968487ee4f8">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/sosphonebook</jdbc-url>
+      <libraries />
+    </data-source>
+  </component>
+</project>

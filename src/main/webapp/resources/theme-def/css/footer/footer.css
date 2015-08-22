@@ -1,0 +1,33 @@
+.footer {
+    height: 220px;
+    background-color: #324659;
+}
+
+.row {
+    height: 180px;
+}
+
+.copyright {
+    height: 40px;
+    font-size: 1.2em;
+    font-family: 'Lato', sans-serif;
+    color: #e3e3e3;
+    text-align: center;
+}
+
+.footer-headline {
+    font-family: 'Oswald', sans-serif;
+    margin-left: 60px;
+    font-family: 'Lato', sans-serif;
+    color: #597997;
+    font-size: 1.4em;
+}
+
+.footer-menu {
+    margin-left: 20px;
+    list-style: none;
+}
+
+ul.footer-menu li a {
+    font-size: 1.0em;
+}

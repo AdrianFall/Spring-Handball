@@ -1,0 +1,27 @@
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
+<spring:url value="resources/css/footer/footer.css" var="footerCss"/>
+
+<link rel="stylesheet" href="${footerCss}"/>
+<link href='http://fonts.googleapis.com/css?family=Lato:400,300italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Oswald:700' rel='stylesheet' type='text/css'>
+
+<div class="footer">
+    <div class="row">
+            <div class="col-md-4">
+            <h5 class="footer-headline">LINKS TO SERVICES</h5>
+            <ul class="footer-menu">
+                <li><a href="/resendEmail">Resend Activation Email</a></li>
+                <li><a href="/requestResetPassword">Request Reset Of Password</a></li>
+                <li><a href="/register">Register Account</a></li>
+                <li><a href="/login">Login To Account</a></li>
+                <%--<li><a href="/en/#world">World</a></li>
+                <li><a href="/en/#devices">Devices</a></li>--%>
+            </ul>
+        </div>
+    </div>
+
+    <div class="copyright">
+        &copy; Template
+    </div>
+</div>

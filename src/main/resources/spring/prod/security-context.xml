@@ -1,0 +1,47 @@
+<beans:bean xmlns="http://www.springframework.org/schema/security"
+            xmlns:beans="http://www.springframework.org/schema/beans"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:sec="http://www.springframework.org/schema/security"
+            xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!-- Web authentication -->
+    <http use-expressions="true" entry-point-ref="webAuthenticationEntryPoint">
+
+        <intercept-url pattern="/admin*" access="hasRole('ROLE_ADMIN') and isFullyAuthenticated()"/>
+        <intercept-url pattern="/main*" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/test*" access="hasRole('ROLE_USER')"/>
+
+
+        <sec:form-login authentication-success-handler-ref="formSuccessHandler"
+                        login-page="/WEB-INF/jsp/login.jsp"
+                        authentication-failure-handler-ref="authenticationFailureHandler"
+                        username-parameter="email"
+                        password-parameter="password"/>
+        <logout logout-success-url="/login" logout-url="/logout" invalidate-session="true"/>
+
+        <!-- enable remember me -->
+        <remember-me user-service-ref="userDetailsService"
+                token-validity-seconds="86400"
+                remember-me-parameter="remember-me"
+                data-source-ref="dataSource" />
+
+        <!-- Adds social authentication filter to the Spring Security filter chain. -->
+        <sec:custom-filter ref="socialAuthenticationFilter" before="PRE_AUTH_FILTER" />
+
+    </http>
+
+    <authentication-manager alias="authenticationManager">
+        <sec:authentication-provider user-service-ref="accountDetailsService">
+            <password-encoder ref="bcryptEncoder"/>
+        </sec:authentication-provider>
+
+        <sec:authentication-provider ref="socialAuthenticationProvider"/>
+
+    </authentication-manager>
+
+    <!-- Turn on the security annotations for defining the roles -->
+    <global-method-security secured-annotations="enabled" />
+</beans:bean>

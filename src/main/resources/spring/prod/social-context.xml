@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:social="http://www.springframework.org/schema/social"
+       xmlns:facebook="http://www.springframework.org/schema/social/facebook"
+       xmlns:google="http://www.springframework.org/schema/social/google"
+       xmlns:linkedin="http://www.springframework.org/schema/social/linkedin"
+       xmlns:github="http://www.springframework.org/schema/social/github"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+       http://www.springframework.org/schema/social http://www.springframework.org/schema/social/spring-social.xsd
+       http://www.springframework.org/schema/social/facebook http://www.springframework.org/schema/social/spring-social-facebook.xsd
+       http://www.springframework.org/schema/social/google http://www.springframework.org/schema/social/spring-social-google.xsd
+       http://www.springframework.org/schema/social/linkedin http://www.springframework.org/schema/social/spring-social-linkedin.xsd
+       http://www.springframework.org/schema/social/github http://www.springframework.org/schema/social/spring-social-github.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- Ensures that configuration properties are read from a property file -->
+    <context:property-placeholder location="classpath:/properties/application.properties"/>
+    <context:property-placeholder location="classpath:/properties/log4j.properties"/>
+
+
+    <!--
+    Configures the social authentication filter which integrates Spring Social
+    with Spring Security.
+-->
+    <bean id="socialAuthenticationFilter" class="org.springframework.social.security.SocialAuthenticationFilter">
+        <constructor-arg index="0" ref="authenticationManager"/>
+        <constructor-arg index="1" ref="userIdSource"/>
+        <constructor-arg index="2" ref="usersConnectionRepository"/>
+        <constructor-arg index="3" ref="connectionFactoryLocator"/>
+
+        <!-- Sets the url of the registration form. -->
+        <property name="signupUrl" value="/social/register"/>
+        <property name="postLoginUrl" value="/main"/>
+        <property name="alwaysUsePostLoginUrl" value="true"/>
+    </bean>
+
+
+    <!--
+        Configures the social authentication provider which processes authentication requests
+        made by using supported social authentication services (FB, Twitter and so on).
+    -->
+    <bean id="socialAuthenticationProvider" class="org.springframework.social.security.SocialAuthenticationProvider">
+        <constructor-arg index="0" ref="usersConnectionRepository"/>
+        <constructor-arg index="1" ref="socialUserDetailsService"/>
+    </bean>
+
+    <!-- This bean is load the user specific data when form login is used. -->
+    <bean id="userDetailsService" class="core.service.security.UserDetailsServiceImpl" autowire="constructor"/>
+
+    <!--
+    This bean is used to load the user specific data when social sign in
+    is used.
+-->
+    <bean id="socialUserDetailsService" class="core.service.security.SocialUserDetailsServiceImpl">
+        <constructor-arg index="0" ref="userDetailsService"/>
+    </bean>
+
+    <bean id="providerSignInUtils" class="org.springframework.social.connect.web.ProviderSignInUtils">
+        <constructor-arg index="0" ref="connectionFactoryLocator"/>
+        <constructor-arg index="1" ref="usersConnectionRepository"/>
+    </bean>
+
+        <!--
+            This bean determines the account ID of the user. The example application
+            uses the username as the account ID.
+        -->
+    <bean id="userIdSource" class="org.springframework.social.security.AuthenticationNameUserIdSource"/>
+
+    <!--
+        This bean encrypts the authorization details of the connection. In
+        our example, the authorization details are stored as plain text.
+        DO NOT USE THIS IN PRODUCTION. -> since it stores the authorization details as plain text
+    -->
+    <bean id="textEncryptor" class="org.springframework.security.crypto.encrypt.Encryptors" factory-method="noOpText" />
+
+
+    <!--<bean id="connectionFactoryLocator" class="org.springframework.social.security.SocialAuthenticationServiceRegistry">
+        <property name="authenticationServices">
+            <list>
+                &lt;!&ndash;PixelPin&ndash;&gt;
+                <bean class="oauth2.pixelpin.security.PixelPinAuthenticationService">
+                    <constructor-arg value="${pixelpin.client.id}"/>
+                    <constructor-arg value="${pixelpin.client.secret}"/>
+                </bean>
+
+
+            </list>
+        </property>
+    </bean>-->
+
+    <!--<bean id="connectionFactoryLocator"
+          class="org.springframework.social.connect.support.ConnectionFactoryRegistry">
+        <property name="connectionFactories">
+            <list>
+                <bean class="oauth2.pixelpin.connect.PixelPinConnectionFactory">
+                    <constructor-arg value="${pixelpin.client.id}" />
+                    <constructor-arg value="${pixelpin.client.secret}" />
+                </bean>
+                <bean class="org.springframework.social.facebook.connect.FacebookConnectionFactory">
+                    <constructor-arg value="${facebook.clientId}" />
+                    <constructor-arg value="${facebook.clientSecret}" />
+                </bean>
+            </list>
+        </property>
+    </bean>-->
+
+
+    <!-- http://stackoverflow.com/questions/17732858/how-to-specify-oauth2-scope-with-spring-social-security-socialauthenticationfilt -->
+    <!--<bean id="connectionFactoryLocator" class="org.springframework.social.security.SocialAuthenticationServiceRegistry">
+        <property name="authenticationServices">
+            <list>
+                &lt;!&ndash;Facebook&ndash;&gt;
+                <bean class="org.springframework.social.facebook.security.FacebookAuthenticationService">
+                    <constructor-arg value="${facebook.app.id}"/>
+                    <constructor-arg value="${facebook.app.secret}"/>
+                </bean>
+
+                &lt;!&ndash;Google&ndash;&gt;
+                <bean class="org.springframework.social.google.security.GoogleAuthenticationService">
+                    <constructor-arg value="${google.client.id}"/>
+                    <constructor-arg value="${google.client.secret}"/>
+                </bean>
+            </list>
+        </property>
+    </bean>-->
+
+    <bean id="connectionFactoryLocator" class="org.springframework.social.security.SocialAuthenticationServiceRegistry">
+        <property name="authenticationServices">
+            <list>
+                <bean class="org.springframework.social.facebook.security.FacebookAuthenticationService">
+                    <constructor-arg value="${facebook.app.id}" />
+                    <constructor-arg value="${facebook.app.secret}" />
+                </bean>
+
+                <bean class="oauth2.pixelpin.security.PixelPinAuthenticationService">
+                    <constructor-arg value="${pixelpin.client.id}"/>
+                    <constructor-arg value="${pixelpin.client.secret}"/>
+                </bean>
+
+                <bean class="org.springframework.social.google.security.GoogleAuthenticationService">
+                    <constructor-arg value="${google.client.id}" />
+                    <constructor-arg value="${google.client.secret}" />
+                </bean>
+
+                <bean class="org.springframework.social.linkedin.security.LinkedInAuthenticationService">
+                    <constructor-arg value="${linkedin.client.id}"/>
+                    <constructor-arg value="${linkedin.client.secret}"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <!--<facebook:config app-id="${facebook.app.id}" app-secret="${facebook.app.secret}"/>
+    <google:config app-id="${google.client.id}" app-secret="${google.client.secret}"/>
+    <linkedin:config app-id="${linkedin.client.id}" app-secret="${linkedin.client.secret}"/>
+    <github:config app-id="${github.client.id}" app-secret="${github.client.secret}"/>-->
+
+    <!--<google:config app-id="${google.client.id}" app-secret="${google.client.secret}"/>-->
+
+
+
+    <!--
+        Configures the connection repository. This application uses JDBC
+        connection repository which saves connection details to database.
+        This repository uses the data source bean for obtaining database
+        connection.
+    -->
+    <social:jdbc-connection-repository/>
+
+    <!--
+        This bean manages the connection flow between the account provider and
+        the example application.
+    -->
+    <bean id="connectController" class="org.springframework.social.connect.web.ConnectController"
+          autowire="constructor"/>
+
+    <!--<bean id="socialSignInAdapter" class="social.SocialSignInAdapter"></bean>
+
+    <bean class="org.springframework.social.connect.web.ProviderSignInController">
+        &lt;!&ndash;relies on by-type autowiring for the constructor-args&ndash;&gt;
+        <constructor-arg index="0" ref="connectionFactoryLocator"/>
+        <constructor-arg index="1" ref="usersConnectionRepository"/>
+        <constructor-arg index="2" ref="socialSignInAdapter"/>
+
+        <property name="applicationUrl" value="http://template-auth.duckdns.org" />
+        <property name="signInUrl" value="http://template-auth.duckdns.org/signin"/>
+    </bean>-->
+</beans>

@@ -1,0 +1,24 @@
+html, body{
+    margin:0px;
+    padding:0px;
+}
+
+.header-top {
+    height: 220px;
+    background-image: url("/resources/img/web_bg.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.header-logo {
+    height: 200px;
+    width: 280px;
+    background-image: url("/resources/img/templateGrafitti.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin: auto auto;
+}
+
+.navbar-default {
+    color: #843534;
+}

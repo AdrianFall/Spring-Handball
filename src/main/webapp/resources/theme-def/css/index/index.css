@@ -1,0 +1,19 @@
+html, body{
+    margin:0px;
+    padding:0px;
+}
+
+
+.content-container {
+    background-color: #dbdad2;
+    height: 520px;
+    margin-top: -20px;
+}
+
+.content-body {
+}
+
+.template-header {
+    padding-top: 100px;
+    text-align: center;
+}
